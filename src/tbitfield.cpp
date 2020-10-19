@@ -194,42 +194,6 @@ TBitField TBitField::operator&(const TBitField &bf) // операция "и"
 			res.pMem[i] &= bf.pMem[i];
 	}
 	return res;
-	/*int min = BitLen, flag = 1;
-	if (BitLen > bf.BitLen)
-	{
-		min = bf.BitLen;
-		flag = 0;
-	}
-	TBitField res(min);
-	if (flag == 1) // this <
-	{
-		for (int i = 0; i < MemLen - 1; i++)
-		{
-			res.pMem[i] = bf.pMem[i];
-		}
-		for (int i = (MemLen - 1) * 32; i < BitLen; i++)
-		{
-			if (bf.GetBit(i)) //GetBit(i)?
-				res.SetBit(i);
-		}
-		for (int i = 0; i < MemLen; i++)
-			res.pMem[i] &= pMem[i];
-	}
-	else // bf <
-	{
-		for (int i = 0; i < bf.MemLen - 1; i++)
-		{
-			res.pMem[i] = pMem[i];
-		}
-		for (int i = (bf.MemLen - 1) * 32; i < bf.BitLen; i++)
-		{
-			if (GetBit(i)) //bf.GetBit(i)?
-				res.SetBit(i);
-		}
-		for (int i = 0; i < bf.MemLen; i++)
-			res.pMem[i] &= bf.pMem[i];
-	}
-	return res;*/
 }
 
 TBitField TBitField::operator~(void) // отрицание
