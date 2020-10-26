@@ -6,16 +6,27 @@
 // Битовое поле
 
 #include "tbitfield.h"
+#define MAXNUMBER 10000000
 
 TBitField::TBitField(int len)
 {
-	BitLen = len;
-	MemLen = len / 32 + 1;
-	pMem = new TELEM[MemLen];
-	for (int i = 0; i < MemLen; i++)
+	try 
 	{
-		pMem[i] = 0;
+		if (len < 0)
+			throw "Negative memory";
+		BitLen = len;
+		MemLen = len / 32 + 1;
+		pMem = new TELEM[MemLen];
+		for (int i = 0; i < MemLen; i++)
+		{
+			pMem[i] = 0;
+		}
 	}
+	catch (int exception)
+	{
+		cout << "Error:" << exception << endl;
+	}
+	
 }
 
 TBitField::TBitField(const TBitField &bf) // конструктор копирования
@@ -55,6 +66,8 @@ int TBitField::GetLength(void) const // получить длину (к-во б�
 
 void TBitField::SetBit(const int n) // установить бит
 {
+	if (n < 0 || n > GetLength())
+		throw "Invalid index";
 	int i = GetMemIndex(n);
 	TELEM m = GetMemMask(n);
 	pMem[i] = pMem[i] | m;
@@ -62,6 +75,8 @@ void TBitField::SetBit(const int n) // установить бит
 
 void TBitField::ClrBit(const int n) // очистить бит
 {
+	if (n < 0 || n > GetLength())
+		throw "Invalid index";
 	int i = GetMemIndex(n);
 	TELEM m = GetMemMask(n);
 	pMem[i] = pMem[i] & (~m);
@@ -69,6 +84,8 @@ void TBitField::ClrBit(const int n) // очистить бит
 
 int TBitField::GetBit(const int n) const // получить значение бита
 {
+	if (n < 0 || n > GetLength())
+		throw "Invalid index";
 	int i = GetMemIndex(n);
 	TELEM m = GetMemMask(n);
 	return pMem[i] & m;
@@ -213,16 +230,19 @@ istream &operator>>(istream &istr, TBitField &bf) // ввод
 	char x;
 	for (int i = 0; i < bf.BitLen; i++)
 	{
-		istr >> x;
-		if (x == '0')
-			bf.ClrBit(i);
-		else
-		{
-			if (x == '1')
-				bf.SetBit(i);
+
+			istr >> x;
+			if (x < 0 || x > MAXNUMBER)
+				throw "Invalid Value";
+			if (x == '0')
+				bf.ClrBit(i);
 			else
-				break;
-		}
+			{
+				if (x == '1')
+					bf.SetBit(i);
+				else
+					break;
+			}
 	}
 	return istr;
 }
